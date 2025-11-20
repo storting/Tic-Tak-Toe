@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     private GameObject redQueue;
     private GameObject blueQueue;
 
-    public AudioSource AudioSourceGM;
     public AudioSource AudioSourceWin;
     public AudioSource AudioSourceWinLine;
 
@@ -33,8 +32,6 @@ public class GameManager : MonoBehaviour
     private WinCount _Wcount;
     private void Start()
     {
-        AudioSourceGM = gameObject.GetComponent<AudioSource>();
-        AudioSourceGM.Play();
         redQueue = GameObject.FindGameObjectWithTag("RedQueue");
         blueQueue = GameObject.FindGameObjectWithTag("qwe");
         FindWinCountObject("WinCountScrt");
@@ -249,5 +246,10 @@ public class GameManager : MonoBehaviour
     public void PlaySound()
     {
         AudioSourceWin.Play();
+    }
+
+    public void QuitApp()
+    {
+        Application.Quit();
     }
 }

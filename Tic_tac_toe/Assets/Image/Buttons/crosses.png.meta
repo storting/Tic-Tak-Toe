@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 67e78655c64e229459dd07eb10bc7f80
+guid: 27b1e2403e797c946ab81e198bf7e7c7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6936555435937362594
-    second: free-icon-setting-3288743_0
+      213: 9007317525652035707
+    second: crosses_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: free-icon-setting-3288743_0
+      name: crosses_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 512
-        height: 512
+        x: 39
+        y: 39
+        width: 434
+        height: 434
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2a2f9d3ea68934060800000000000000
-      internalID: 6936555435937362594
+      spriteID: b78d3a7119b600d70800000000000000
+      internalID: 9007317525652035707
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      free-icon-setting-3288743_0: 6936555435937362594
+      crosses_0: 9007317525652035707
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
