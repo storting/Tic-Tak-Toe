@@ -12,6 +12,8 @@ public class StyleManager : MonoBehaviour
     private GameObject[] _redBut;
     private GameObject[] _blueBut;
 
+    public UnityEngine.UI.Image RedWinner;
+    public UnityEngine.UI.Image BlueWinner;
 
     public Sprite NeonBG;
     public Sprite ColdBG;
@@ -25,6 +27,8 @@ public class StyleManager : MonoBehaviour
     public Sprite CrossColdBlue;
     public Sprite CrossNeonBlue;
 
+    public UnityEngine.UI.Image NewGameBut;
+
     private void Start()
     {
         srBG = GameObject.FindGameObjectWithTag("BackgroundSprite").GetComponent<SpriteRenderer>();
@@ -35,9 +39,6 @@ public class StyleManager : MonoBehaviour
 
     public void ChangeAllSprites(Sprite redSprite, Sprite blueSprite)
     {
-        Debug.Log("Func init");
-        
-        // Обрабатываем красные объекты
         if (_redBut != null)
         {
             foreach (GameObject redObj in _redBut)
@@ -59,7 +60,6 @@ public class StyleManager : MonoBehaviour
             Debug.LogError("RedBut array is null");
         }
 
-        // Обрабатываем синие объекты
         if (_blueBut != null)
         {
             foreach (GameObject blueObj in _blueBut)
@@ -87,12 +87,10 @@ public class StyleManager : MonoBehaviour
         List<GameObject> redList = new List<GameObject>();
         List<GameObject> blueList = new List<GameObject>();
 
-        // Находим все объекты (включая неактивные) на сцене
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
 
         foreach (GameObject obj in allObjects)
         {
-            // Проверяем, что объект имеет тег и он находится в сцене (не префаб)
             if (obj.CompareTag("RedBut") && obj.scene.IsValid())
             {
                 redList.Add(obj);
@@ -105,9 +103,17 @@ public class StyleManager : MonoBehaviour
 
         _redBut = redList.ToArray();
         _blueBut = blueList.ToArray();
+    }
 
-        Debug.Log($"Found {_redBut.Length} RedBut objects (including inactive)");
-        Debug.Log($"Found {_blueBut.Length} BlueBut objects (including inactive)");
+    public void ChangeButtonColor(UnityEngine.UI.Image but, string HEX)
+    {
+        if (but != null)
+        {
+            Color newColor;
+            ColorUtility.TryParseHtmlString(HEX, out newColor);
+
+            but.color = newColor;
+        }
     }
 
     public void SetNeon()
@@ -115,14 +121,20 @@ public class StyleManager : MonoBehaviour
         srBG.sprite = NeonBG;
         _redQueue.sprite = CrossNeonRed;
         _blueQueue.sprite = CrossNeonBlue;
+        RedWinner.sprite = CrossNeonRed;
+        BlueWinner.sprite = CrossNeonBlue;
         ChangeAllSprites(CrossNeonRed, CrossNeonBlue);
+        ChangeButtonColor(NewGameBut, "#C6185A");
     }
     public void SetCold()
     {
         srBG.sprite = ColdBG;
         _redQueue.sprite = CrossColdRed;
         _blueQueue.sprite = CrossColdBlue;
+        RedWinner.sprite = CrossColdRed;
+        BlueWinner.sprite = CrossColdBlue;
         ChangeAllSprites(CrossColdRed, CrossColdBlue);
+        ChangeButtonColor(NewGameBut, "#8484FF");
     }
 
     public void SetFootbal()
@@ -130,8 +142,9 @@ public class StyleManager : MonoBehaviour
         srBG.sprite = FootbalBG;
         _redQueue.sprite = CrossFootbalRed;
         _blueQueue.sprite = CrossFootbalBlue;
+        RedWinner.sprite = CrossFootbalRed;
+        BlueWinner.sprite = CrossFootbalBlue;
         ChangeAllSprites(CrossFootbalRed, CrossFootbalBlue);
-    }
-
-    
+        ChangeButtonColor(NewGameBut, "#DDC529");
+    } 
 }

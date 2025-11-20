@@ -17,11 +17,12 @@ public class GameManager : MonoBehaviour
     private GameObject blueQueue;
 
     public AudioSource AudioSourceGM;
+    public AudioSource AudioSourceWin;
+    public AudioSource AudioSourceWinLine;
 
     [SerializeField] public Button[] buttons;
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private Button restartButton;
-    [SerializeField] public AudioClip mainMusic;
 
     private string[] board = new string[9];
     private bool gameActive = true;
@@ -43,10 +44,7 @@ public class GameManager : MonoBehaviour
 
     void FindWinCountObject(string tag)
     {
-        // Сначала попробуем найти активный
         _Wcount = GameObject.FindGameObjectWithTag(tag)?.GetComponent<WinCount>();
-
-        // Если не нашли, ищем среди неактивных
         if (_Wcount == null)
         {
             WinCount[] allWinCounts = Resources.FindObjectsOfTypeAll<WinCount>();
@@ -76,22 +74,19 @@ public class GameManager : MonoBehaviour
         }
 
         if (restartButton != null)
-            restartButton.onClick.AddListener(RestartGame);
+            restartButton.onClick.AddListener(RestartGameEnd);
     }
 
     public void MakeMove(int position)
     {
         if (!gameActive || board[position] != "") return;
 
-        // ЗАПОМИНАЕМ текущего игрока ДО хода
         int currentPlayerBeforeMove = _numPlayer;
         string playerSymbol = (_numPlayer == 0) ? "X" : "O";
 
-        // Записываем ход в массив
         board[position] = playerSymbol;
         buttons[position].interactable = false;
 
-        // Проверяем победу игрока
         if (CheckWinner(playerSymbol))
         {
             string winnerName = (currentPlayerBeforeMove == 0) ? "Red" : "Blue";
@@ -101,11 +96,12 @@ public class GameManager : MonoBehaviour
             if (currentPlayerBeforeMove == 0) PlayerWinCountRed++;
             else PlayerWinCountBlue++;
             gameActive = false;
-            if (PlayerWinCountRed == _Wcount.CountToWin || PlayerWinCountBlue == _Wcount.CountToWin)
+            if (PlayerWinCountRed >= _Wcount.CountToWin || PlayerWinCountBlue >= _Wcount.CountToWin)
             {
                 string score = $"<color=red>{PlayerWinCountRed}</color> - <color=blue>{PlayerWinCountBlue}</color>";
                 statusText.text = $"{score}";
                 WinnerBg.SetActive(true);
+                Invoke("PlaySound", 1f);
                 if (PlayerWinCountRed > PlayerWinCountBlue)
                 {
                     RedWinnerText.SetActive(true);
@@ -128,7 +124,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // Меняем игрока только если нет победы
             _numPlayer = (_numPlayer == 0) ? 1 : 0;
             UpdateQueueUI();
             UpdateStatusText();
@@ -156,10 +151,27 @@ public class GameManager : MonoBehaviour
                 board[b] == player &&
                 board[c] == player)
             {
+                SetButtonAlpha(1f, a);
+                SetButtonAlpha(1f, b);
+                SetButtonAlpha(1f, c);
+                AudioSourceWinLine.Play();
                 return true;
             }
         }
         return false;
+    }
+
+    public void SetButtonAlpha(float alpha, int index)
+    {
+        alpha = Mathf.Clamp01(alpha);
+
+        Image mainImage = buttons[index].GetComponent<Image>();
+        if (mainImage != null)
+        {
+            Color color = mainImage.color;
+            color.a = alpha;
+            mainImage.color = color;
+        }
     }
 
     bool IsBoardFull()
@@ -204,6 +216,7 @@ public class GameManager : MonoBehaviour
             GameObject blueBut = FindChildByTag(buttons[i].gameObject, "BlueBut");
             if (redBut != null) redBut.SetActive(false);
             if (blueBut != null) blueBut.SetActive(false);
+            SetButtonAlpha(0f, i);
         }
 
         _numPlayer = 0;
@@ -221,8 +234,8 @@ public class GameManager : MonoBehaviour
             GameObject blueBut = FindChildByTag(buttons[i].gameObject, "BlueBut");
             if (redBut != null) redBut.SetActive(false);
             if (blueBut != null) blueBut.SetActive(false);
+            SetButtonAlpha(0f, i);
         }
-
         WinnerBg.SetActive(false);
         RedWinnerText.SetActive(false);
         BlueWinnerText.SetActive(false);
@@ -231,5 +244,10 @@ public class GameManager : MonoBehaviour
         _numPlayer = 0;
         gameActive = true;
         UpdateQueueUI();
+    }
+
+    public void PlaySound()
+    {
+        AudioSourceWin.Play();
     }
 }

@@ -15,25 +15,19 @@ public class Playing : MonoBehaviour
 
     public void OnClick()
     {
-        // Находим дочерние объекты
         GameObject playerRed = FindChildByTagInChildren("RedBut");
         GameObject playerBlue = FindChildByTagInChildren("BlueBut");
 
-        // Проверяем, что обе картинки выключены (клетка пустая)
         if (!playerBlue.activeInHierarchy && !playerRed.activeInHierarchy)
         {
-            // Получаем индекс этой кнопки
             int buttonIndex = GetButtonIndex();
 
             if (buttonIndex != -1)
             {
-                // ЗАПОМИНАЕМ текущего игрока ДО хода
                 int currentPlayerBeforeMove = _gameManager._numPlayer;
 
-                // Вызываем MakeMove
                 _gameManager.MakeMove(buttonIndex);
 
-                // Включаем картинку того игрока, который делал ход
                 if (currentPlayerBeforeMove == 0)
                 {
                     playerRed.SetActive(true);
